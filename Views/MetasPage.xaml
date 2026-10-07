@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MinhaBiblioteca.ViewModels"
+             x:Class="MinhaBiblioteca.Views.MetasPage"
+             x:DataType="vm:MetasViewModel"
+             Title="Metas de Leitura"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding CarregarMetaCommand}">
+        <ScrollView Padding="20">
+            <VerticalStackLayout Spacing="16">
+
+                <!-- Seletor de Ano -->
+                <Border Padding="16,12"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Grid.Column="0"
+                               Text="Ano da Meta de Leitura:"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        
+                        <Border Grid.Column="1" StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}">
+                            <Picker ItemsSource="{Binding AnosDisponiveis}"
+                                    SelectedItem="{Binding AnoSelecionado, Mode=TwoWay}"
+                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                    WidthRequest="100" />
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Dashboard de Progresso da Meta -->
+                <Border Padding="24"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light=#C7D2FE, Dark=#3730A3}"
+                        BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#1E1B4B}">
+                    <VerticalStackLayout Spacing="16">
+                        
+                        <Label Text="{Binding AnoSelecionado, StringFormat='🎯 Meta Anual - {0}'}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               TextColor="{AppThemeBinding Light=#3730A3, Dark=#E0E7FF}" />
+
+                        <!-- Grande Contador de Progresso -->
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <HorizontalStackLayout Spacing="6" HorizontalOptions="Center">
+                                <Label Text="{Binding LivrosConcluidos}"
+                                       FontSize="48"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#4F46E5, Dark=#818CF8}" />
+                                <Label Text="{Binding MetaQuantidade, StringFormat='/ {0}'}"
+                                       FontSize="28"
+                                       FontAttributes="Bold"
+                                       VerticalOptions="End"
+                                       TextColor="{AppThemeBinding Light=#6366F1, Dark=#A5B4FC}"
+                                       Margin="0,0,0,6" />
+                            </HorizontalStackLayout>
+                            
+                            <Label Text="Livros Concluídos"
+                                   FontSize="14"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#4338CA, Dark=#C7D2FE}" />
+                        </VerticalStackLayout>
+
+                        <!-- Barra de Progresso -->
+                        <Grid RowDefinitions="Auto, Auto" RowSpacing="6">
+                            <Grid Grid.Row="0" ColumnDefinitions="*, Auto">
+                                <Label Grid.Column="0" Text="Progresso Alcançado" FontSize="13" TextColor="{AppThemeBinding Light=#4338CA, Dark=#C7D2FE}" />
+                                <Label Grid.Column="1" Text="{Binding PercentualMeta, StringFormat='{0}%'}" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#3730A3, Dark=#E0E7FF}" />
+                            </Grid>
+                            
+                            <ProgressBar Grid.Row="1"
+                                         Progress="{Binding ProgressoMeta}"
+                                         ProgressColor="#4F46E5"
+                                         HeightRequest="12" />
+                        </Grid>
+
+                        <!-- Mensagem Motivacional -->
+                        <Border Padding="14,10"
+                                StrokeShape="RoundRectangle 12"
+                                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#2E1065}">
+                            <Label Text="{Binding MensagemMotivacional}"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light=#4F46E5, Dark=#DDD6FE}" />
+                        </Border>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Definir/Editar Meta Anual -->
+                <Border Padding="20"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                    
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Configurar Meta Anual"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+
+                        <Label Text="Informe a quantidade total de livros que você deseja ler durante o ano:"
+                               FontSize="13"
+                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12">
+                            <Border Grid.Column="0" StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}">
+                                <Entry Text="{Binding MetaQuantidade, Mode=TwoWay}"
+                                       Keyboard="Numeric"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                       Margin="10,0" />
+                            </Border>
+
+                            <Button Grid.Column="1"
+                                    Command="{Binding SalvarMetaCommand}"
+                                    Text="Salvar Meta"
+                                    FontSize="14"
+                                    FontAttributes="Bold"
+                                    TextColor="White"
+                                    BackgroundColor="#4F46E5"
+                                    CornerRadius="10"
+                                    HeightRequest="44"
+                                    Padding="16,0" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

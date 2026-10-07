@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MinhaBiblioteca.ViewModels"
+             x:Class="MinhaBiblioteca.Views.EstatisticasPage"
+             x:DataType="vm:EstatisticasViewModel"
+             Title="Estatísticas de Leitura"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding CarregarEstatisticasCommand}">
+        <ScrollView Padding="20">
+            <VerticalStackLayout Spacing="16">
+
+                <!-- Cards Principais de Indicadores (Grid 2x2) -->
+                <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *" RowSpacing="12" ColumnSpacing="12">
+
+                    <!-- Card 1: Total de Livros -->
+                    <Border Grid.Row="0" Grid.Column="0" Padding="16"
+                            StrokeShape="RoundRectangle 16" StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="📚 Total de Livros" FontSize="13" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            <Label Text="{Binding Estatisticas.TotalLivros}" FontSize="28" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                            <Label Text="registrados no app" FontSize="11" TextColor="#94A3B8" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Card 2: Páginas Lidas -->
+                    <Border Grid.Row="0" Grid.Column="1" Padding="16"
+                            StrokeShape="RoundRectangle 16" StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="📖 Páginas Lidas" FontSize="13" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            <Label Text="{Binding Estatisticas.TotalPaginasLidas, StringFormat='{0:N0}'}" FontSize="28" FontAttributes="Bold" TextColor="#4F46E5" />
+                            <Label Text="páginas no total" FontSize="11" TextColor="#94A3B8" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Card 3: Nota Média -->
+                    <Border Grid.Row="1" Grid.Column="0" Padding="16"
+                            StrokeShape="RoundRectangle 16" StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="⭐ Nota Média" FontSize="13" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="{Binding Estatisticas.NotaMedia, StringFormat='{0:F1}'}" FontSize="28" FontAttributes="Bold" TextColor="#F59E0B" />
+                                <Label Text="/ 5.0" FontSize="14" VerticalOptions="End" TextColor="#94A3B8" Margin="0,0,0,4" />
+                            </HorizontalStackLayout>
+                            <Label Text="livros avaliados" FontSize="11" TextColor="#94A3B8" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Card 4: Concluídos no Ano -->
+                    <Border Grid.Row="1" Grid.Column="1" Padding="16"
+                            StrokeShape="RoundRectangle 16" StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding AnoAtual, StringFormat='🏆 Lido em {0}'}" FontSize="13" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            <Label Text="{Binding Estatisticas.ConcluidosNoAno}" FontSize="28" FontAttributes="Bold" TextColor="#10B981" />
+                            <Label Text="livros no ano atual" FontSize="11" TextColor="#94A3B8" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Detalhamento por Status -->
+                <Border Padding="20"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="1"
+                        Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                        BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                    
+                    <VerticalStackLayout Spacing="14">
+                        <Label Text="Distribuição por Status de Leitura"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+
+                        <!-- Quero Ler -->
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" RowSpacing="4">
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="8">
+                                <BoxView WidthRequest="12" HeightRequest="12" Color="#D35400" CornerRadius="6" VerticalOptions="Center" />
+                                <Label Text="Quero Ler" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}" />
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Estatisticas.QueroLerCount, StringFormat='{0} livros'}" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </Grid>
+
+                        <!-- Lendo -->
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" RowSpacing="4">
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="8">
+                                <BoxView WidthRequest="12" HeightRequest="12" Color="#2980B9" CornerRadius="6" VerticalOptions="Center" />
+                                <Label Text="Lendo Atualmente" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}" />
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Estatisticas.LendoCount, StringFormat='{0} livros'}" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </Grid>
+
+                        <!-- Lido -->
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" RowSpacing="4">
+                            <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="8">
+                                <BoxView WidthRequest="12" HeightRequest="12" Color="#27AE60" CornerRadius="6" VerticalOptions="Center" />
+                                <Label Text="Livros Lidos" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}" />
+                            </HorizontalStackLayout>
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Estatisticas.LidoCount, StringFormat='{0} livros'}" FontSize="14" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

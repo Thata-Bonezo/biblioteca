@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="MinhaBiblioteca.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MinhaBiblioteca"
-    Shell.FlyoutBehavior="Disabled"
-    Title="MinhaBiblioteca">
+<Shell x:Class="MinhaBiblioteca.AppShell"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:MinhaBiblioteca.Views"
+       Title="Minha Biblioteca"
+       Shell.FlyoutBehavior="Disabled"
+       Shell.TabBarBackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}"
+       Shell.TabBarForegroundColor="#4F46E5"
+       Shell.TabBarTitleColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+       Shell.TabBarUnselectedColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Livros" Icon="dotnet_bot.png">
+            <ShellContent Title="Livros" ContentTemplate="{DataTemplate views:LivrosPage}" Route="LivrosPage" />
+        </Tab>
+        <Tab Title="Metas" Icon="dotnet_bot.png">
+            <ShellContent Title="Metas" ContentTemplate="{DataTemplate views:MetasPage}" Route="MetasPage" />
+        </Tab>
+        <Tab Title="Estatísticas" Icon="dotnet_bot.png">
+            <ShellContent Title="Estatísticas" ContentTemplate="{DataTemplate views:EstatisticasPage}" Route="EstatisticasPage" />
+        </Tab>
+    </TabBar>
 
 </Shell>

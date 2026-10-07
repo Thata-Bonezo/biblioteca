@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MinhaBiblioteca.ViewModels"
+             xmlns:converters="clr-namespace:MinhaBiblioteca.Converters"
+             x:Class="MinhaBiblioteca.Views.LivroDetalhePage"
+             x:DataType="vm:LivroDetalheViewModel"
+             Title="Detalhes do Livro"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+            <converters:RatingToStarsConverter x:Key="RatingToStarsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="16">
+
+            <!-- Card de Cabeçalho do Livro -->
+            <Border Padding="20"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto" ColumnDefinitions="*, Auto">
+
+                    <!-- Título -->
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="{Binding Livro.Titulo}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+
+                    <!-- Status Badge -->
+                    <Border Grid.Row="0" Grid.Column="1"
+                            Padding="12,4"
+                            StrokeShape="RoundRectangle 12"
+                            BackgroundColor="{Binding Livro.Status, Converter={StaticResource StatusToColorConverter}}"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start">
+                        <Label Text="{Binding Livro.Status}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                    </Border>
+
+                    <!-- Autor -->
+                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                           Text="{Binding Livro.Autor, StringFormat='por {0}'}"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}"
+                           Margin="0,4,0,8" />
+
+                    <!-- Gênero Chip -->
+                    <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                            HorizontalOptions="Start"
+                            Padding="10,4"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="#818CF8"
+                            BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#312E81}"
+                            Margin="0,0,0,12">
+                        <Label Text="{Binding Livro.Genero, StringFormat='🏷️ {0}'}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#4F46E5, Dark=#C7D2FE}" />
+                    </Border>
+
+                    <!-- Datas -->
+                    <VerticalStackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Spacing="4">
+                        <Label Text="{Binding Livro.DataCadastro, StringFormat='📅 Cadastrado em: {0:dd/MM/yyyy}'}"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                        
+                        <Label Text="{Binding Livro.DataConclusao, StringFormat='✅ Concluído em: {0:dd/MM/yyyy}'}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="#10B981"
+                               IsVisible="{Binding Livro.DataConclusao, Converter={StaticResource StatusToColorConverter}, ConverterParameter=NotNull}" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Card de Atualização de Progresso -->
+            <Border Padding="20"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Progresso da Leitura"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+
+                    <!-- Progresso Geral -->
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding Livro.PaginaAtual, StringFormat='Página {0}'}"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                        <Label Grid.Column="1"
+                               Text="{Binding Livro.TotalPaginas, StringFormat='de {0} páginas'}"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                    </Grid>
+
+                    <ProgressBar Progress="{Binding Livro.Progresso}"
+                                 ProgressColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
+                                 HeightRequest="10" />
+
+                    <!-- Ajustar Página Atual -->
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="12" Margin="0,8,0,0">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Atualizar para a página:" FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                            <Border StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}">
+                                <Entry Text="{Binding NovaPaginaAtual, Mode=TwoWay}"
+                                       Keyboard="Numeric"
+                                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                       Margin="10,0" />
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <Button Grid.Column="1"
+                                Command="{Binding AtualizarProgressoCommand}"
+                                Text="Atualizar"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                TextColor="White"
+                                BackgroundColor="#4F46E5"
+                                CornerRadius="10"
+                                VerticalOptions="End"
+                                HeightRequest="44"
+                                Padding="16,0" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Card de Avaliação e Resenha -->
+            <Border Padding="20"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="1"
+                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Avaliação &amp; Resenha"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}" />
+
+                    <!-- Seletor de Nota (Bolinhas/Estrelas 1 a 5) -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Nota (Clique para selecionar):" FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                        
+                        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Button Text="1 ★" Command="{Binding SelecionarNotaCommand}" CommandParameter="1" BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}" TextColor="#D97706" CornerRadius="8" Padding="12,6" />
+                            <Button Text="2 ★" Command="{Binding SelecionarNotaCommand}" CommandParameter="2" BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}" TextColor="#D97706" CornerRadius="8" Padding="12,6" />
+                            <Button Text="3 ★" Command="{Binding SelecionarNotaCommand}" CommandParameter="3" BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}" TextColor="#D97706" CornerRadius="8" Padding="12,6" />
+                            <Button Text="4 ★" Command="{Binding SelecionarNotaCommand}" CommandParameter="4" BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}" TextColor="#D97706" CornerRadius="8" Padding="12,6" />
+                            <Button Text="5 ★" Command="{Binding SelecionarNotaCommand}" CommandParameter="5" BackgroundColor="{AppThemeBinding Light=#FEF3C7, Dark=#78350F}" TextColor="#D97706" CornerRadius="8" Padding="12,6" />
+                        </HorizontalStackLayout>
+
+                        <Label Text="{Binding NotaAvaliacao, StringFormat='Nota Selecionada: {0} Estrela(s)'}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#F59E0B"
+                               HorizontalOptions="Center"
+                               Margin="0,4,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- Resenha -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Resenha / Minhas impressões:" FontSize="12" TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                        <Border StrokeShape="RoundRectangle 10" StrokeThickness="1" Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}">
+                            <Editor Text="{Binding NovaResenha, Mode=TwoWay}"
+                                    Placeholder="Escreva o que achou da leitura..."
+                                    PlaceholderColor="#94A3B8"
+                                    HeightRequest="90"
+                                    TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                    Margin="10,4" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Button Command="{Binding SalvarAvaliacaoCommand}"
+                            Text="Salvar Avaliação &amp; Resenha"
+                            FontSize="14"
+                            FontAttributes="Bold"
+                            TextColor="White"
+                            BackgroundColor="#10B981"
+                            CornerRadius="10"
+                            HeightRequest="44" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Ações: Editar e Excluir -->
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="12" Margin="0,8,0,24">
+                <Button Grid.Column="0"
+                        Command="{Binding EditarCommand}"
+                        Text="✏️ Editar Livro"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}"
+                        BackgroundColor="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                        CornerRadius="12"
+                        HeightRequest="48" />
+
+                <Button Grid.Column="1"
+                        Command="{Binding ExcluirCommand}"
+                        Text="🗑️ Excluir Livro"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        TextColor="White"
+                        BackgroundColor="#EF4444"
+                        CornerRadius="12"
+                        HeightRequest="48" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
