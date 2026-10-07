@@ -90,6 +90,12 @@ public partial class LivroDetalheViewModel : ObservableObject, IQueryAttributabl
     }
 
     [RelayCommand]
+    private async Task VoltarAsync()
+    {
+        await Shell.Current.GoToAsync("..");
+    }
+
+    [RelayCommand]
     private async Task EditarAsync()
     {
         if (Livro is null) return;

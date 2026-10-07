@@ -5,6 +5,7 @@
              xmlns:models="clr-namespace:MinhaBiblioteca.Models"
              xmlns:converters="clr-namespace:MinhaBiblioteca.Converters"
              x:Class="MinhaBiblioteca.Views.LivrosPage"
+             x:Name="LivrosPageRoot"
              x:DataType="vm:LivrosViewModel"
              Title="Minha Biblioteca"
              BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
@@ -33,19 +34,24 @@
         <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Margin="16,4,16,12">
             <HorizontalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding StatusFiltros}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <Border StrokeShape="RoundRectangle 20" Padding="14,6" StrokeThickness="1"
-                                Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}"
-                                BackgroundColor="{AppThemeBinding Light=#EDF2F7, Dark=#1E293B}">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding BindingContext.FiltrarCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                                      CommandParameter="{Binding .}" />
-                            </Border.GestureRecognizers>
-                            <Label Text="{Binding .}"
-                                   FontSize="13"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}" />
-                        </Border>
+                    <DataTemplate x:DataType="vm:StatusFiltroChip">
+                        <Button Text="{Binding Nome}"
+                                Command="{Binding BindingContext.FiltrarCommand, Source={x:Reference LivrosPageRoot}}"
+                                CommandParameter="{Binding Nome}"
+                                FontSize="13"
+                                FontAttributes="Bold"
+                                CornerRadius="20"
+                                HeightRequest="36"
+                                Padding="14,6"
+                                BackgroundColor="{AppThemeBinding Light=#EDF2F7, Dark=#1E293B}"
+                                TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}">
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding Selecionado}" Value="True">
+                                    <Setter Property="BackgroundColor" Value="#4F46E5" />
+                                    <Setter Property="TextColor" Value="White" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </HorizontalStackLayout>

@@ -1,41 +1,125 @@
-## Visual Studio / .NET Core / .NET MAUI gitignore
-[Ob]j/
-[Bb]in/
-*.user
-*.userosscache
-*.sln.docstates
-
-# User-specific files
-*.rsuser
-*.suo
-*.user
-*.userhost
-*.sln.docstates
-
-# Build results
+## Build
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 x64/
 x86/
-[Aa]rm/
-[Aa]rm64/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
 bld/
-[Bb]uild/
-nupkg/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Aa]rtifacts/
+msbuild.log
+msbuild.err
+msbuild.wrn
 
-# Visual Studio Code
-.vscode/
+## Visual Studio
+.vs/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.pidb
+*.svclog
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+*.psess
+*.vsp
+*.vspx
+*.sap
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
 
-# Rider
+## VS Code (mantém configs compartilháveis)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## JetBrains Rider
 .idea/
+*.sln.iml
 
-# Operating System Files
-.DS_Store
-Thumbs.db
-desktop.ini
+## NuGet
+[Pp]ackages/
+!*.nupkg
+!*.snupkg
+**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
 
-# Database files generated locally
+## Testes e cobertura
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+TestResult.xml
+
+## Publicação / empacotamento
+publish/
+PublishScripts/
+*.nupkg
+*.snupkg
+*.appx
+*.appxbundle
+*.appxupload
+*.msix
+*.msixbundle
+*.apk
+*.aab
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## .NET MAUI / Xamarin
+**/Resources/**/*.h
+*.mobileprovision
+*.provisionprofile
+*.keystore
+*.jks
+*.pfx
+!*.pfx.example
+appsettings.*.local.json
+
+## SQLite e dados locais gerados em runtime
 *.db3
+*.db3-journal
+*.db3-wal
+*.db3-shm
 *.db
+*.sqlite
+*.sqlite3
+
+## Sistema operacional
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+
+## Outros
+*.log
+*.tmp
+*.temp
+*.cache
+node_modules/

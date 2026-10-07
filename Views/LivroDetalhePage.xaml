@@ -18,6 +18,17 @@
     <ScrollView Padding="20">
         <VerticalStackLayout Spacing="16">
 
+            <Button Command="{Binding VoltarCommand}"
+                    Text="← Voltar para a lista"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    TextColor="{AppThemeBinding Light=#4F46E5, Dark=#A5B4FC}"
+                    BackgroundColor="{AppThemeBinding Light=#EEF2FF, Dark=#312E81}"
+                    CornerRadius="12"
+                    HeightRequest="44"
+                    HorizontalOptions="Start"
+                    Padding="16,0" />
+
             <!-- Card de Cabeçalho do Livro -->
             <Border Padding="20"
                     StrokeShape="RoundRectangle 16"

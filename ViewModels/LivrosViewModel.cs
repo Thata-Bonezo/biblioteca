@@ -21,7 +21,8 @@ public partial class LivrosViewModel : ObservableObject
     private string _statusFiltroSelecionado = "Todos";
 
     [ObservableProperty]
-    private List<string> _statusFiltros = StatusLivro.TodosFiltros;
+    private ObservableCollection<StatusFiltroChip> _statusFiltros = new(
+        StatusLivro.TodosFiltros.Select(s => new StatusFiltroChip(s, s == "Todos")));
 
     [ObservableProperty]
     private bool _isRefreshing;
@@ -67,7 +68,21 @@ public partial class LivrosViewModel : ObservableObject
 
     partial void OnStatusFiltroSelecionadoChanged(string value)
     {
+        foreach (var chip in StatusFiltros)
+        {
+            chip.Selecionado = chip.Nome == value;
+        }
+
         _ = CarregarLivrosAsync();
+    }
+
+    [RelayCommand]
+    private void Filtrar(string? status)
+    {
+        if (string.IsNullOrWhiteSpace(status))
+            return;
+
+        StatusFiltroSelecionado = status;
     }
 
     [RelayCommand]
