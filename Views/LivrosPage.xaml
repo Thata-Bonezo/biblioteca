@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MinhaBiblioteca.ViewModels"
+             xmlns:models="clr-namespace:MinhaBiblioteca.Models"
+             xmlns:converters="clr-namespace:MinhaBiblioteca.Converters"
+             x:Class="MinhaBiblioteca.Views.LivrosPage"
+             x:DataType="vm:LivrosViewModel"
+             Title="Minha Biblioteca"
+             BackgroundColor="{AppThemeBinding Light=#F8FAFC, Dark=#0F172A}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+            <converters:RatingToStarsConverter x:Key="RatingToStarsConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto, Auto, *">
+
+        <!-- Barra de Busca -->
+        <Border Grid.Row="0" Margin="16,12,16,6" Padding="4,0" StrokeShape="RoundRectangle 12" StrokeThickness="1"
+                Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+            <SearchBar Text="{Binding BuscaTexto, Mode=TwoWay}"
+                       Placeholder="Buscar por título, autor ou gênero..."
+                       PlaceholderColor="{AppThemeBinding Light=#94A3B8, Dark=#64748B}"
+                       TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                       BackgroundColor="Transparent" />
+        </Border>
+
+        <!-- Filtros de Status (Chips/Horizontal List) -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never" Margin="16,4,16,12">
+            <HorizontalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding StatusFiltros}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Border StrokeShape="RoundRectangle 20" Padding="14,6" StrokeThickness="1"
+                                Stroke="{AppThemeBinding Light=#CBD5E1, Dark=#475569}"
+                                BackgroundColor="{AppThemeBinding Light=#EDF2F7, Dark=#1E293B}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BindingContext.FiltrarCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                      CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="{Binding .}"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#334155, Dark=#E2E8F0}" />
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <!-- Lista de Livros -->
+        <RefreshView Grid.Row="2"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding CarregarLivrosCommand}">
+            <Grid>
+                <!-- CollectionView de Livros -->
+                <CollectionView ItemsSource="{Binding Livros}"
+                                SelectionMode="None"
+                                Margin="16,0,16,16">
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12" Margin="32">
+                            <Label Text="📚" FontSize="64" HorizontalOptions="Center" />
+                            <Label Text="Nenhum livro encontrado"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#475569, Dark=#94A3B8}" />
+                            <Label Text="Cadastre um novo livro ou ajuste o filtro para visualizar."
+                                   FontSize="14"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#64748B}" />
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Livro">
+                            <Border Margin="0,0,0,12"
+                                    Padding="16"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="1"
+                                    Stroke="{AppThemeBinding Light=#E2E8F0, Dark=#334155}"
+                                    BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E293B}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.SelecionarLivroCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+
+                                <Grid RowDefinitions="Auto, Auto, Auto, Auto" ColumnDefinitions="*, Auto">
+
+                                    <!-- Título e Status -->
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding Titulo}"
+                                           FontSize="17"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#0F172A, Dark=#F8FAFC}"
+                                           LineBreakMode="TailTruncation" />
+
+                                    <Border Grid.Row="0" Grid.Column="1"
+                                            Padding="10,4"
+                                            StrokeShape="RoundRectangle 12"
+                                            BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                            HorizontalOptions="End">
+                                        <Label Text="{Binding Status}"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="White" />
+                                    </Border>
+
+                                    <!-- Autor e Gênero -->
+                                    <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Spacing="6" Margin="0,4,0,8">
+                                        <Label Text="{Binding Autor}"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                                        <Label Text="•" FontSize="14" TextColor="#94A3B8"
+                                               IsVisible="{Binding Genero, Converter={StaticResource StatusToColorConverter}, ConverterParameter=NotEmpty}" />
+                                        <Label Text="{Binding Genero}"
+                                               FontSize="13"
+                                               FontAttributes="Italic"
+                                               TextColor="{AppThemeBinding Light=#4F46E5, Dark=#818CF8}" />
+                                    </HorizontalStackLayout>
+
+                                    <!-- Progresso de Leitura -->
+                                    <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" RowDefinitions="Auto, Auto" Margin="0,4,0,6">
+                                        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,4">
+                                            <Label Grid.Column="0"
+                                                   Text="{Binding PaginaAtual, StringFormat='Página {0}'}"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light=#64748B, Dark=#94A3B8}" />
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding TotalPaginas, StringFormat='de {0} pág. ({1}%)', ConverterParameter={Binding PercentualProgresso}}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light=#475569, Dark=#CBD5E1}" />
+                                        </Grid>
+                                        <ProgressBar Grid.Row="1"
+                                                     Progress="{Binding Progresso}"
+                                                     ProgressColor="{AppThemeBinding Light=#4F46E5, Dark=#6366F1}"
+                                                     HeightRequest="8" />
+                                    </Grid>
+
+                                    <!-- Avaliação com Estrelas -->
+                                    <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                           Text="{Binding Nota, Converter={StaticResource RatingToStarsConverter}}"
+                                           FontSize="13"
+                                           TextColor="#F59E0B"
+                                           Margin="0,4,0,0" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Botão Flutuante (FAB) de Novo Livro -->
+                <Button Command="{Binding AdicionarLivroCommand}"
+                        Text="+ Novo Livro"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        TextColor="White"
+                        BackgroundColor="#4F46E5"
+                        CornerRadius="24"
+                        HeightRequest="48"
+                        Padding="20,0"
+                        HorizontalOptions="End"
+                        VerticalOptions="End"
+                        Margin="0,0,24,24"
+                        Shadow="{Shadow Brush=#4F46E5, Offset='0,4', Radius=10, Opacity=0.4}" />
+            </Grid>
+        </RefreshView>
+    </Grid>
+</ContentPage>
